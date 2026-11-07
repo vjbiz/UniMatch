@@ -49,21 +49,21 @@ export const RequirementCheckerView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Student Academic Inputs */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
-          <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+        <div className="lg:col-span-5 glass-embossed-card rounded-3xl p-6 space-y-5">
+          <h3 className="text-sm font-bold text-slate-900 border-b border-slate-200/60 pb-3 flex items-center gap-2">
             <Info className="w-4 h-4 text-blue-600" />
             <span>{isTh ? 'ข้อมูลการเรียนของคุณ' : 'Your Academic Credentials'}</span>
           </h3>
 
           {/* Select Target Course */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
               {isTh ? 'เลือกคณะและมหาวิทยาลัยเป้าหมาย' : 'Target University & Major'}
             </label>
             <select
               value={selectedCourseId}
               onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
+              className="w-full px-3 py-2 text-xs bg-white/80 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium"
             >
               {THAI_UNIVERSITY_COURSES.map((course) => (
                 <option key={course.id} value={course.id}>
@@ -178,8 +178,8 @@ export const RequirementCheckerView: React.FC = () => {
           </div>
 
           {/* Criteria Checklist */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="glass-embossed-card rounded-3xl p-6 space-y-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               {isTh ? 'รายการตรวจสอบเกณฑ์ตามประกาศ' : 'Admission Criteria Breakdown'}
             </h4>
 
@@ -284,14 +284,14 @@ export const RequirementCheckerView: React.FC = () => {
               onClick={() => {
                 setActiveTab('activities');
               }}
-              className="text-xs font-semibold text-slate-600 hover:text-slate-900"
+              className="text-xs font-bold text-slate-700 glass-embossed-button px-3.5 py-2 rounded-xl cursor-pointer"
             >
               ← {isTh ? 'ไปหากิจกรรมเพิ่ม' : 'Explore More Activities'}
             </button>
 
             <button
               onClick={() => setActiveTab('builder')}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-white glass-embossed-primary rounded-xl cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>{isTh ? 'จัดวางพอร์ต 10 หน้าตามเกณฑ์นี้' : 'Build 10-Page Portfolio'}</span>

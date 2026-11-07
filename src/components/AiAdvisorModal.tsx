@@ -94,19 +94,19 @@ export const AiAdvisorModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="bg-white/92 backdrop-blur-2xl rounded-3xl max-w-lg w-full p-6 sm:p-7 max-h-[90vh] overflow-y-auto shadow-2xl border border-white relative animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl glass-embossed-primary text-white flex items-center justify-center shadow-md">
+              <Sparkles className="w-5 h-5 text-blue-200" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-900">
+              <h3 className="text-base font-extrabold text-slate-900">
                 {isTh ? 'ที่ปรึกษา AI กลยุทธ์ TCAS' : 'TCAS Strategy & SOP AI Coach'}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 font-medium">
                 {isTh ? 'วิเคราะห์โปรไฟล์และตรวจทาน Statement of Purpose' : 'Personalized admissions guidance and SOP feedback'}
               </p>
             </div>
@@ -114,20 +114,20 @@ export const AiAdvisorModal: React.FC = () => {
 
           <button
             onClick={() => setIsAiAdvisorOpen(false)}
-            className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500"
+            className="w-8 h-8 rounded-xl glass-embossed-button flex items-center justify-center text-slate-500 hover:text-slate-900"
           >
             ✕
           </button>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-2">
+        <div className="flex items-center gap-2 mb-5 border-b border-slate-200/80 pb-2.5">
           <button
             onClick={() => setActiveTab('strategy')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
               activeTab === 'strategy'
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'glass-embossed-primary text-white shadow-sm'
+                : 'glass-embossed-button text-slate-700'
             }`}
           >
             {isTh ? 'กลยุทธ์ภาพรวมรอบพอร์ต' : 'Admission Strategy'}
@@ -135,10 +135,10 @@ export const AiAdvisorModal: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('sop')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
               activeTab === 'sop'
-                ? 'bg-blue-600 text-white'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'glass-embossed-primary text-white shadow-sm'
+                : 'glass-embossed-button text-slate-700'
             }`}
           >
             {isTh ? 'ตรวจทานเรียงความ (SOP Review)' : 'SOP Draft Review'}
@@ -160,7 +160,7 @@ export const AiAdvisorModal: React.FC = () => {
             <button
               onClick={handleGetStrategyAdvice}
               disabled={loading}
-              className="w-full py-2.5 px-4 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 text-xs font-bold text-white glass-embossed-primary disabled:opacity-50 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md"
             >
               {loading ? (
                 <>
@@ -176,7 +176,7 @@ export const AiAdvisorModal: React.FC = () => {
             </button>
 
             {adviceText && (
-              <div className="p-4 bg-blue-50/50 border border-blue-200 rounded-xl text-xs text-slate-800 leading-relaxed whitespace-pre-line">
+              <div className="p-4 rounded-2xl glass-embossed-card text-xs text-slate-800 leading-relaxed whitespace-pre-line border border-blue-200">
                 {adviceText}
               </div>
             )}
@@ -190,7 +190,7 @@ export const AiAdvisorModal: React.FC = () => {
               <span className="font-bold text-slate-800 block mb-1">
                 {isTh ? 'ร่าง Statement of Purpose ปัจจุบันของคุณ (จากหน้า 3):' : 'Current SOP Draft from Page 3:'}
               </span>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl max-h-36 overflow-y-auto italic line-clamp-4 text-slate-700">
+              <div className="p-3.5 bg-white/80 border border-slate-200 rounded-xl max-h-36 overflow-y-auto italic line-clamp-4 text-slate-700 shadow-inner">
                 {currentSop || (isTh ? '(ยังไม่มีข้อความในหน้า 3)' : '(No text yet on Page 3)')}
               </div>
             </div>
@@ -198,7 +198,7 @@ export const AiAdvisorModal: React.FC = () => {
             <button
               onClick={handleReviewSop}
               disabled={loading || !currentSop}
-              className="w-full py-2.5 px-4 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 text-xs font-bold text-white glass-embossed-primary disabled:opacity-50 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md"
             >
               {loading ? (
                 <>
@@ -216,11 +216,11 @@ export const AiAdvisorModal: React.FC = () => {
             {sopFeedback && (
               <div className="space-y-3 pt-2 text-xs">
                 {sopFeedback.strengths && sopFeedback.strengths.length > 0 && (
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-                    <span className="font-bold text-emerald-900 block mb-1">
+                  <div className="p-3.5 rounded-2xl glass-card-green">
+                    <span className="font-bold text-emerald-950 block mb-1">
                       {isTh ? 'จุดเด่นของเรียงความ:' : 'Key Strengths:'}
                     </span>
-                    <ul className="list-disc list-inside text-emerald-800 space-y-0.5">
+                    <ul className="list-disc list-inside text-emerald-900 space-y-0.5 font-medium">
                       {sopFeedback.strengths.map((s, i) => (
                         <li key={i}>{s}</li>
                       ))}
@@ -229,11 +229,11 @@ export const AiAdvisorModal: React.FC = () => {
                 )}
 
                 {sopFeedback.improvements && sopFeedback.improvements.length > 0 && (
-                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
-                    <span className="font-bold text-amber-900 block mb-1">
+                  <div className="p-3.5 rounded-2xl glass-card-amber">
+                    <span className="font-bold text-amber-950 block mb-1">
                       {isTh ? 'จุดที่ควรเสริมเพิ่มเติม:' : 'Areas to Strengthen:'}
                     </span>
-                    <ul className="list-disc list-inside text-amber-800 space-y-0.5">
+                    <ul className="list-disc list-inside text-amber-900 space-y-0.5 font-medium">
                       {sopFeedback.improvements.map((imp, i) => (
                         <li key={i}>{imp}</li>
                       ))}
@@ -242,16 +242,16 @@ export const AiAdvisorModal: React.FC = () => {
                 )}
 
                 {sopFeedback.suggestedParagraph && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
-                    <span className="font-bold text-blue-900 block mb-1">
+                  <div className="p-3.5 rounded-2xl glass-card-blue space-y-2">
+                    <span className="font-bold text-blue-950 block">
                       {isTh ? 'ตัวอย่างประโยค/ย่อหน้าที่แนะนำเพิ่มเติม:' : 'Suggested Exemplary Paragraph:'}
                     </span>
-                    <p className="text-blue-800 leading-relaxed italic mb-3">
+                    <p className="text-blue-950 leading-relaxed italic font-medium">
                       "{sopFeedback.suggestedParagraph}"
                     </p>
                     <button
                       onClick={applySuggestedParagraph}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs"
+                      className="px-3.5 py-1.5 glass-embossed-primary text-white font-bold rounded-xl text-xs shadow-sm"
                     >
                       {isTh ? '+ ใส่ย่อหน้านี้ลงในหน้า 3' : '+ Insert into Page 3'}
                     </button>

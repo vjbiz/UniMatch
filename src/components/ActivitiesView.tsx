@@ -138,15 +138,15 @@ export const ActivitiesView: React.FC = () => {
         {/* Add custom activity button */}
         <button
           onClick={() => setIsAddCustomOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition-colors shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-blue-700 glass-embossed-button rounded-xl shrink-0 cursor-pointer"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 text-blue-600" />
           <span>{isTh ? '+ เพิ่มกิจกรรมของฉันเอง' : '+ Add My Own Activity'}</span>
         </button>
       </div>
 
       {/* Filter Chips Bar */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm mb-8 space-y-4">
+      <div className="glass-embossed-card rounded-2xl p-4 sm:p-5 mb-8 space-y-4">
         {/* Active Faculty Filter Banner (if coming from Course Explorer) */}
         {selectedFacultyFilter && (
           <div className="flex items-center justify-between p-3 bg-blue-50/70 border border-blue-200/60 rounded-xl text-xs text-blue-900">
@@ -195,17 +195,17 @@ export const ActivitiesView: React.FC = () => {
         </div>
 
         {/* Category Segmented Controls */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pt-2 border-t border-slate-100 no-scrollbar">
+        <div className="flex items-center gap-2 overflow-x-auto pt-2 border-t border-slate-200/60 no-scrollbar">
           {categories.map((cat) => {
             const isActive = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap shrink-0 ${
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                   isActive
-                    ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    ? 'glass-embossed-primary text-white shadow'
+                    : 'glass-embossed-button text-slate-700 hover:text-slate-900'
                 }`}
               >
                 {isTh ? cat.labelTh : cat.labelEn}
@@ -222,7 +222,7 @@ export const ActivitiesView: React.FC = () => {
           return (
             <div
               key={act.id}
-              className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between group"
+              className="glass-embossed-card rounded-2xl overflow-hidden transition-all flex flex-col justify-between group hover:-translate-y-1"
             >
               {/* Optional Photo Banner */}
               {act.imagePath && (
@@ -311,7 +311,7 @@ export const ActivitiesView: React.FC = () => {
 
                   <button
                     onClick={() => handleAddToPortfolio(act)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg transition-colors shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white glass-embossed-primary rounded-xl cursor-pointer"
                   >
                     <FolderPlus className="w-3.5 h-3.5" />
                     <span>{isTh ? 'ใส่ลงพอร์ตโฟลิโอ' : 'Add to Portfolio'}</span>
@@ -325,15 +325,15 @@ export const ActivitiesView: React.FC = () => {
 
       {/* Add Custom Activity Modal */}
       {isAddCustomOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-embossed-card rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-slate-900">
                 {isTh ? 'บันทึกกิจกรรมส่วนตัวลงพอร์ต' : 'Add Custom Activity'}
               </h3>
               <button
                 onClick={() => setIsAddCustomOpen(false)}
-                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500"
+                className="w-8 h-8 rounded-xl glass-embossed-button flex items-center justify-center text-slate-500 hover:text-slate-900 cursor-pointer"
               >
                 ✕
               </button>
@@ -411,17 +411,17 @@ export const ActivitiesView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200/60">
                 <button
                   type="button"
                   onClick={() => setIsAddCustomOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
+                  className="px-4 py-2 text-xs font-bold text-slate-700 glass-embossed-button rounded-xl cursor-pointer"
                 >
                   {isTh ? 'ยกเลิก' : 'Cancel'}
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                  className="px-4 py-2 text-xs font-bold text-white glass-embossed-primary rounded-xl cursor-pointer"
                 >
                   {isTh ? 'บันทึกกิจกรรม' : 'Save Activity'}
                 </button>

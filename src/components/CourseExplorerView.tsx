@@ -54,7 +54,7 @@ export const CourseExplorerView: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm mb-8 space-y-4">
+      <div className="glass-embossed-card rounded-2xl p-4 sm:p-5 mb-8 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           {/* Search Input */}
           <div className="md:col-span-8 relative">
@@ -64,7 +64,7 @@ export const CourseExplorerView: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={isTh ? 'ค้นหาชื่อหลักสูตร, คณะ หรือมหาวิทยาลัย เช่น วิศวะคอม, หมอศิริราช, นิติศาสตร์...' : 'Search by major, faculty or university...'}
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-white/70 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
             />
           </div>
 
@@ -73,7 +73,7 @@ export const CourseExplorerView: React.FC = () => {
             <select
               value={selectedUni}
               onChange={(e) => setSelectedUni(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 text-sm bg-white/70 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all font-medium"
             >
               {universities.map((u) => (
                 <option key={u.id} value={u.id}>
@@ -85,13 +85,13 @@ export const CourseExplorerView: React.FC = () => {
         </div>
 
         {/* Quick faculty tags (unboxed inline text buttons) */}
-        <div className="flex items-center gap-2 overflow-x-auto text-xs text-slate-500 pt-2 border-t border-slate-100 no-scrollbar">
-          <span className="font-semibold shrink-0">{isTh ? 'สาขาแนะนำ:' : 'Quick Focus:'}</span>
+        <div className="flex items-center gap-2 overflow-x-auto text-xs text-slate-600 pt-2 border-t border-slate-200/60 no-scrollbar">
+          <span className="font-bold shrink-0">{isTh ? 'สาขาแนะนำ:' : 'Quick Focus:'}</span>
           {['วิศวกรรมศาสตร์', 'แพทยศาสตร์', 'นิติศาสตร์', 'พาณิชยศาสตร์และการบัญชี', 'เทคโนโลยีสารสนเทศ (SIT)', 'อุตสาหกรรมเกษตร'].map((fac) => (
             <button
               key={fac}
               onClick={() => setSearchQuery(fac)}
-              className="hover:text-blue-600 hover:underline transition-colors shrink-0"
+              className="px-2.5 py-1 rounded-lg glass-embossed-button hover:text-blue-600 transition-colors shrink-0 text-slate-700 font-semibold cursor-pointer"
             >
               {fac}
             </button>
@@ -106,8 +106,8 @@ export const CourseExplorerView: React.FC = () => {
           return (
             <div
               key={course.id}
-              className={`bg-white border rounded-2xl p-6 shadow-sm transition-all flex flex-col justify-between ${
-                isTarget ? 'border-blue-600 ring-2 ring-blue-500/20' : 'border-slate-200 hover:border-slate-300 hover:shadow'
+              className={`glass-embossed-card rounded-2xl p-6 transition-all flex flex-col justify-between hover:-translate-y-1 ${
+                isTarget ? 'ring-2 ring-blue-500/50' : ''
               }`}
             >
               <div>
@@ -193,12 +193,12 @@ export const CourseExplorerView: React.FC = () => {
                         targetUniversities: [course.universityTh],
                       });
                     }}
-                    className="w-full mt-2 py-1.5 text-xs font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors border border-slate-200 hover:border-blue-200"
+                    className="w-full mt-2 py-2 text-xs font-bold text-slate-700 hover:text-blue-700 rounded-xl transition-all glass-embossed-button cursor-pointer"
                   >
                     {isTh ? '+ ตั้งเป็นคณะเป้าหมายหลัก' : '+ Set as Dream Faculty'}
                   </button>
                 ) : (
-                  <div className="w-full mt-2 py-1.5 text-xs font-semibold text-center text-blue-700 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="w-full mt-2 py-2 text-xs font-bold text-center text-white glass-embossed-primary rounded-xl">
                     ✓ {isTh ? 'คณะเป้าหมายหลักของคุณ' : 'Your Dream Faculty Target'}
                   </div>
                 )}
@@ -222,25 +222,25 @@ export const CourseExplorerView: React.FC = () => {
 
       {/* Course Detail Modal */}
       {selectedCourseModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="glass-embossed-card rounded-3xl max-w-2xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="flex items-start justify-between mb-4">
               <div>
-                <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
+                <div className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
                   {isTh ? selectedCourseModal.universityTh : selectedCourseModal.universityEn}
                 </div>
                 <h3 className="text-xl font-extrabold text-slate-900">
                   {isTh ? selectedCourseModal.nameTh : selectedCourseModal.nameEn}
                 </h3>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs font-semibold text-slate-500">
                   {isTh ? selectedCourseModal.facultyTh : selectedCourseModal.facultyEn}
                 </div>
               </div>
 
               <button
                 onClick={() => setSelectedCourseModal(null)}
-                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
+                className="w-8 h-8 rounded-xl glass-embossed-button flex items-center justify-center text-slate-500 hover:text-slate-900 cursor-pointer"
               >
                 ✕
               </button>
@@ -248,25 +248,25 @@ export const CourseExplorerView: React.FC = () => {
 
             {/* Quotas & Requirements List */}
             <div className="space-y-4 mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 {isTh ? 'โครงการที่เปิดรับในรอบที่ 1 (TCAS Round 1 Quotas)' : 'Round 1 Admission Quotas'}
               </h4>
 
               {selectedCourseModal.quotas.map((quota, idx) => (
-                <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs">
+                <div key={idx} className="bg-white/80 border border-white/90 rounded-2xl p-4 text-xs shadow-xs">
                   <div className="flex items-center justify-between font-bold text-slate-900 mb-2">
                     <span>{isTh ? quota.nameTh : quota.nameEn}</span>
-                    <span className="font-mono text-blue-600">{quota.seats} {isTh ? 'ที่นั่ง' : 'seats'}</span>
+                    <span className="font-mono text-blue-700 font-extrabold">{quota.seats} {isTh ? 'ที่นั่ง' : 'seats'}</span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2 text-slate-600 font-mono">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2 text-slate-700 font-mono font-medium">
                     <div>GPAX: {quota.minGpax.toFixed(2)}</div>
                     {quota.minSciCredits && <div>{isTh ? `วิทย์: ${quota.minSciCredits} หน่วย` : `Sci: ${quota.minSciCredits} cr.`}</div>}
                     {quota.minMathCredits && <div>{isTh ? `คณิต: ${quota.minMathCredits} หน่วย` : `Math: ${quota.minMathCredits} cr.`}</div>}
                   </div>
 
-                  <p className="text-slate-600 leading-relaxed border-t border-slate-200/80 pt-2">
-                    <span className="font-semibold text-slate-800">{isTh ? 'คุณสมบัติพิเศษ: ' : 'Special Criteria: '}</span>
+                  <p className="text-slate-600 leading-relaxed border-t border-slate-200/60 pt-2">
+                    <span className="font-bold text-slate-800">{isTh ? 'คุณสมบัติพิเศษ: ' : 'Special Criteria: '}</span>
                     {isTh ? quota.specialCriteriaTh : quota.specialCriteriaEn}
                   </p>
                 </div>
@@ -275,10 +275,10 @@ export const CourseExplorerView: React.FC = () => {
 
             {/* Portfolio Tips for this Faculty */}
             <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
                 {isTh ? 'คำแนะนำการทำพอร์ตโฟลิโอเฉพาะคณะนี้' : 'Faculty Portfolio Best Practices'}
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-600">
+              <ul className="space-y-1.5 text-xs text-slate-700">
                 {(isTh ? selectedCourseModal.portfolioTipsTh : selectedCourseModal.portfolioTipsEn).map((tip, i) => (
                   <li key={i} className="flex items-start gap-2">
                     <span className="text-emerald-600 font-bold">✓</span>
@@ -289,10 +289,10 @@ export const CourseExplorerView: React.FC = () => {
             </div>
 
             {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200/60">
               <button
                 onClick={() => setSelectedCourseModal(null)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
+                className="px-4 py-2 text-xs font-bold text-slate-700 glass-embossed-button rounded-xl cursor-pointer"
               >
                 {isTh ? 'ปิดหน้าต่าง' : 'Close'}
               </button>
@@ -303,7 +303,7 @@ export const CourseExplorerView: React.FC = () => {
                   setSelectedCourseModal(null);
                   setActiveTab('activities');
                 }}
-                className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 text-xs font-bold text-white glass-embossed-primary rounded-xl cursor-pointer"
               >
                 {isTh ? 'หากิจกรรมสำหรับคณะนี้' : 'Find Matching Activities'}
               </button>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Printer, Download, RotateCcw, ChevronLeft, ChevronRight, Sparkles, Check, Image as ImageIcon, Plus } from 'lucide-react';
+import { Printer, Download, RotateCcw, ChevronLeft, ChevronRight, Sparkles, Check, Image as ImageIcon, Plus, Camera, Upload, Trash2 } from 'lucide-react';
 
 export const PortfolioBuilderView: React.FC = () => {
   const {
@@ -18,8 +18,47 @@ export const PortfolioBuilderView: React.FC = () => {
   const [activePageIndex, setActivePageIndex] = useState<number>(0);
   const currentPage = portfolioPages[activePageIndex];
 
+  // Dedicated file input references
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const projectPhotoInputRef = useRef<HTMLInputElement>(null);
+
   const handlePrint = () => {
     window.print();
+  };
+
+  // Working profile photo upload handler
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert(isTh ? 'กรุณาเลือกไฟล์รูปภาพ (JPG, PNG, WebP)' : 'Please select an image file (JPG, PNG, WebP)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      if (dataUrl) {
+        updatePortfolioPage(1, { photoUrl: dataUrl });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Working project / camp image upload handler
+  const handleProjectImageUpload = (e: React.ChangeEvent<HTMLInputElement>, targetField: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      if (dataUrl) {
+        updatePortfolioPage(currentPage.pageNumber, { [targetField]: dataUrl });
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleImportActivityIntoPage = (activityId: string) => {
@@ -76,18 +115,28 @@ export const PortfolioBuilderView: React.FC = () => {
               </div>
             </div>
 
-            {/* Student Portrait Area */}
+            {/* Clickable Student Portrait Area */}
             <div className="my-8 flex flex-col items-center justify-center">
-              <div className="w-40 h-52 rounded-xl border-2 border-dashed border-slate-300 bg-white shadow-sm flex flex-col items-center justify-center overflow-hidden p-2 text-center relative group">
+              <div
+                onClick={() => photoInputRef.current?.click()}
+                className="w-40 h-52 rounded-2xl border-2 border-dashed border-blue-400 bg-white shadow-md flex flex-col items-center justify-center overflow-hidden p-2 text-center relative group cursor-pointer hover:border-blue-600 hover:scale-[1.02] transition-all"
+                title={isTh ? 'คลิกเพื่ออัปโหลดหรือเปลี่ยนรูปถ่าย' : 'Click to upload or change portrait photo'}
+              >
                 {c.photoUrl ? (
-                  <img src={c.photoUrl} alt="Student Portrait" className="w-full h-full object-cover rounded-lg" />
+                  <>
+                    <img src={c.photoUrl} alt="Student Portrait" className="w-full h-full object-cover rounded-xl" />
+                    <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-bold p-2 backdrop-blur-[2px]">
+                      <Camera className="w-6 h-6 mb-1 text-white" />
+                      <span>{isTh ? 'คลิกเพื่อเปลี่ยนรูป' : 'Click to change'}</span>
+                    </div>
+                  </>
                 ) : (
-                  <div className="text-slate-400 flex flex-col items-center p-3">
-                    <ImageIcon className="w-8 h-8 mb-2 text-slate-300" />
-                    <span className="text-[11px] font-medium text-slate-600">
-                      {isTh ? 'รูปถ่ายชุดนักเรียน (1.5 - 2 นิ้ว)' : 'Student Portrait Photo'}
+                  <div className="text-slate-400 flex flex-col items-center p-3 group-hover:text-blue-600 transition-colors">
+                    <Camera className="w-9 h-9 mb-2 text-blue-500" />
+                    <span className="text-[11px] font-bold text-slate-800 group-hover:text-blue-600">
+                      {isTh ? 'คลิกเพื่ออัปโหลดรูป' : 'Click to Upload'}
                     </span>
-                    <span className="text-[9px] text-slate-400 mt-1">{isTh ? 'หน้าตรง พื้นหลังเรียบ' : 'Formal Uniform'}</span>
+                    <span className="text-[9px] text-slate-400 mt-1">{isTh ? 'รูปชุดนักเรียน (1.5-2 นิ้ว)' : 'Uniform Portrait'}</span>
                   </div>
                 )}
               </div>
@@ -204,7 +253,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 {c.body}
               </div>
 
-              {/* Highlight bullet points */}
               {c.keyHighlights && c.keyHighlights.length > 0 && (
                 <div className="mt-6 pt-4 border-t border-slate-200">
                   <span className="text-xs font-bold text-slate-900 block mb-2">
@@ -263,7 +311,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 {c.description}
               </div>
 
-              {/* Tools */}
               {c.toolsUsed && (
                 <div className="text-xs text-slate-500 font-mono">
                   <span className="font-bold text-slate-700">{isTh ? 'เครื่องมือที่ใช้: ' : 'Tools/Tech: '}</span>
@@ -294,7 +341,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 <span>{isTh ? `ระยะเวลา: ${c.duration}` : `Duration: ${c.duration}`}</span>
               </div>
 
-              {/* Camp Photo */}
               <div className="h-44 w-full bg-slate-100 rounded-xl border border-slate-200 mb-5 overflow-hidden flex items-center justify-center">
                 {c.campPhotoUrl ? (
                   <img src={c.campPhotoUrl} alt="Camp activity" className="w-full h-full object-cover" />
@@ -306,7 +352,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 )}
               </div>
 
-              {/* Learnings */}
               <div className="text-xs text-slate-700 leading-relaxed text-justify">
                 <span className="font-bold text-slate-900 block mb-1">
                   {isTh ? 'ความรู้และการพัฒนาตนเองจากการเข้าค่าย:' : 'Core Learnings & Growth:'}
@@ -337,7 +382,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 <span>{c.duration}</span>
               </div>
 
-              {/* Photo Box */}
               <div className="h-44 w-full bg-slate-100 rounded-xl border border-slate-200 mb-5 overflow-hidden flex items-center justify-center">
                 {c.photoUrl ? (
                   <img src={c.photoUrl} alt="Leadership activity" className="w-full h-full object-cover" />
@@ -349,7 +393,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 )}
               </div>
 
-              {/* Content */}
               <div className="space-y-3 text-xs text-slate-700 leading-relaxed text-justify">
                 <div>
                   <span className="font-bold text-slate-900">{isTh ? 'ผลงานความสำเร็จ: ' : 'Achievement: '}</span>
@@ -379,7 +422,6 @@ export const PortfolioBuilderView: React.FC = () => {
                 </h2>
               </div>
 
-              {/* Grid of Certificates */}
               <div className="grid grid-cols-2 gap-3 mb-6">
                 {(c.certificatesList || []).map((cert: any, i: number) => (
                   <div key={i} className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col justify-between min-h-[90px]">
@@ -409,50 +451,63 @@ export const PortfolioBuilderView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="p-4 sm:p-6 space-y-6">
+      {/* Hidden File Inputs for Working Photo Uploads */}
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handlePhotoUpload}
+        className="hidden"
+      />
+      <input
+        ref={projectPhotoInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          if (currentPage.type === 'academic') handleProjectImageUpload(e, 'projectPhotoUrl');
+          else if (currentPage.type === 'camp') handleProjectImageUpload(e, 'campPhotoUrl');
+          else if (currentPage.type === 'activity') handleProjectImageUpload(e, 'photoUrl');
+        }}
+        className="hidden"
+      />
+
       {/* Header & Export Bar */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">
-            <span>Official TCAS Format</span>
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
+            <span>TCAS Round 1 Portfolio</span>
             <span aria-hidden="true">·</span>
-            <span>A4 Print & PDF Ready</span>
-            <span aria-hidden="true">·</span>
-            <span>10 Pages Strict Limit</span>
+            <span>10 Pages Standard</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
             {isTh ? 'สตูดิโอจัดทำพอร์ตโฟลิโอ 10 หน้า' : 'TCAS 10-Page Portfolio Studio'}
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 mt-1 max-w-2xl">
-            {isTh
-              ? 'ปรับแต่งเนื้อหาแต่ละหน้าอย่างอิสระ ดึงกิจกรรมจากคลังที่สะสมไว้ และพิมพ์หรือบันทึกเป็นไฟล์ PDF ตามมาตรฐานขนาดกระดาษ A4 ของระบบ TCAS รอบ 1'
-              : 'Customize each page with live A4 aspect ratio preview, import tracked accomplishments, and export print-ready PDFs.'}
-          </p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        {/* Action buttons with Embossed Glassy Styling */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={exportDataJson}
-            className="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors shadow-sm flex items-center gap-1.5"
-            title={isTh ? 'สำรองข้อมูลพอร์ตโฟลิโอเก็บไว้ในคอมพิวเตอร์' : 'Backup Portfolio JSON'}
+            className="px-3 py-1.5 text-xs font-bold text-slate-700 glass-embossed-button rounded-xl flex items-center gap-1.5"
+            title={isTh ? 'สำรองข้อมูลพอร์ตโฟลิโอเก็บไว้ในเครื่อง' : 'Backup Portfolio JSON'}
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{isTh ? 'สำรอง JSON' : 'Export JSON'}</span>
+            <span>{isTh ? 'สำรอง JSON' : 'Export'}</span>
           </button>
 
           <button
             onClick={handlePrint}
-            className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl transition-colors shadow-sm flex items-center gap-2"
+            className="px-4 py-2 text-xs font-bold text-white glass-embossed-primary rounded-xl flex items-center gap-1.5 shadow-md"
           >
             <Printer className="w-4 h-4" />
-            <span>{isTh ? 'พิมพ์ / บันทึก PDF (10 หน้า)' : 'Print / Export PDF'}</span>
+            <span>{isTh ? 'พิมพ์ / ส่งออก PDF' : 'Print / Export PDF'}</span>
           </button>
         </div>
       </div>
 
       {/* Page Numbers Thumbnail Bar */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-sm mb-8 overflow-x-auto no-scrollbar">
+      <div className="p-2.5 rounded-2xl glass-embossed-card overflow-x-auto no-scrollbar shadow-sm">
         <div className="flex items-center gap-2 min-w-max">
           {portfolioPages.map((page, idx) => {
             const isActive = activePageIndex === idx;
@@ -460,16 +515,16 @@ export const PortfolioBuilderView: React.FC = () => {
               <button
                 key={page.pageNumber}
                 onClick={() => setActivePageIndex(idx)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all text-left flex flex-col gap-0.5 border ${
+                className={`px-3 py-2 rounded-xl text-xs font-medium transition-all text-left flex flex-col gap-0.5 ${
                   isActive
-                    ? 'border-blue-600 bg-blue-50 text-blue-900 shadow-sm'
-                    : 'border-slate-100 hover:border-slate-300 text-slate-600 hover:bg-slate-50'
+                    ? 'glass-card-blue text-blue-900 font-bold scale-[1.02] shadow-sm'
+                    : 'glass-embossed-button text-slate-600'
                 }`}
               >
-                <span className="font-mono text-[10px] text-slate-400 font-bold uppercase">
+                <span className="font-mono text-[10px] text-slate-500 font-bold uppercase">
                   {isTh ? `หน้า ${page.pageNumber}` : `Page ${page.pageNumber}`}
                 </span>
-                <span className="font-semibold truncate max-w-[120px]">
+                <span className="font-semibold truncate max-w-[110px]">
                   {isTh ? page.titleTh.split('(')[0] : page.titleEn}
                 </span>
               </button>
@@ -478,16 +533,16 @@ export const PortfolioBuilderView: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Studio Grid: Left Form Editor + Right A4 Live Canvas */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Main Studio Stack */}
+      <div className="space-y-6">
         {/* Left Column: Page Form Editor & Import Activities */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="p-5 sm:p-6 rounded-3xl glass-embossed-card space-y-4 shadow-lg">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div>
               <span className="text-[10px] font-mono text-blue-600 font-bold uppercase">
-                {isTh ? `แก้ไขหน้า ${currentPage.pageNumber}` : `Editing Page ${currentPage.pageNumber}`}
+                {isTh ? `แก้ไขข้อมูลหน้า ${currentPage.pageNumber}` : `Editing Page ${currentPage.pageNumber}`}
               </span>
-              <h3 className="text-base font-bold text-slate-900">
+              <h3 className="text-base font-extrabold text-slate-900">
                 {isTh ? currentPage.titleTh : currentPage.titleEn}
               </h3>
             </div>
@@ -496,9 +551,9 @@ export const PortfolioBuilderView: React.FC = () => {
             {currentPage.type === 'sop' && (
               <button
                 onClick={() => setIsAiAdvisorOpen(true)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-blue-800 glass-embossed-button rounded-xl"
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>{isTh ? 'AI ช่วยเกลา SOP' : 'Polish with AI'}</span>
               </button>
             )}
@@ -506,7 +561,7 @@ export const PortfolioBuilderView: React.FC = () => {
 
           {/* Quick Import from Tracked Activities */}
           {['academic', 'camp', 'activity'].includes(currentPage.type) && trackedActivities.length > 0 && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-2">
+            <div className="p-3.5 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 text-xs space-y-2 shadow-sm">
               <span className="font-bold text-slate-700 block">
                 {isTh ? 'ดึงข้อมูลจากกิจกรรมที่คุณสะสมไว้:' : 'Import from Tracked Activities:'}
               </span>
@@ -515,7 +570,7 @@ export const PortfolioBuilderView: React.FC = () => {
                   <button
                     key={act.id}
                     onClick={() => handleImportActivityIntoPage(act.id)}
-                    className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg hover:border-blue-500 hover:text-blue-600 transition-colors text-[11px] truncate max-w-[200px]"
+                    className="px-2.5 py-1 glass-embossed-button rounded-lg text-[11px] font-semibold text-slate-800 truncate max-w-[200px]"
                     title={act.title}
                   >
                     + {act.title}
@@ -529,48 +584,95 @@ export const PortfolioBuilderView: React.FC = () => {
           <div className="space-y-4 text-xs">
             {currentPage.type === 'cover' && (
               <>
+                {/* Working Cover Photo Uploader Widget */}
+                <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80 space-y-2 shadow-inner">
+                  <label className="block font-bold text-slate-800">
+                    {isTh ? 'รูปถ่ายประจำตัว / ชุดนักเรียน (Student Portrait Photo)' : 'Student Portrait Photo'}
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div
+                      onClick={() => photoInputRef.current?.click()}
+                      className="w-14 h-18 rounded-xl border-2 border-dashed border-blue-400 bg-white overflow-hidden cursor-pointer flex items-center justify-center shrink-0 shadow-sm hover:border-blue-600 group relative"
+                      title={isTh ? 'คลิกเพื่อเลือกไฟล์' : 'Click to select photo'}
+                    >
+                      {currentPage.content.photoUrl ? (
+                        <>
+                          <img src={currentPage.content.photoUrl} alt="Portrait" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[9px] font-bold">
+                            {isTh ? 'เปลี่ยน' : 'Change'}
+                          </div>
+                        </>
+                      ) : (
+                        <Camera className="w-6 h-6 text-blue-500" />
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <button
+                        type="button"
+                        onClick={() => photoInputRef.current?.click()}
+                        className="px-3 py-1.5 glass-embossed-button text-xs font-bold text-blue-800 rounded-xl flex items-center gap-1.5"
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        <span>{currentPage.content.photoUrl ? (isTh ? 'เปลี่ยนรูปภาพ' : 'Change Photo') : (isTh ? 'อัปโหลดรูปถ่าย...' : 'Upload Photo...')}</span>
+                      </button>
+
+                      {currentPage.content.photoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => updatePortfolioPage(1, { photoUrl: '' })}
+                          className="text-[11px] text-red-600 hover:text-red-800 font-semibold flex items-center gap-1"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>{isTh ? 'ลบรูปภาพ' : 'Remove Photo'}</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ชื่อ-นามสกุล นักเรียน' : 'Student Full Name'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.studentName || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { studentName: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-semibold"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'โรงเรียน' : 'High School Name'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.school || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { school: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-semibold"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'คณะและสาขาเป้าหมาย' : 'Target Faculty & Major'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.targetFaculty || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { targetFaculty: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-semibold"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'มหาวิทยาลัย' : 'Target University'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.targetUniversity || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { targetUniversity: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-semibold"
                   />
                 </div>
               </>
@@ -580,44 +682,44 @@ export const PortfolioBuilderView: React.FC = () => {
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Email</label>
+                    <label className="block font-bold text-slate-700 mb-1">Email</label>
                     <input
                       type="email"
                       value={currentPage.content.contactEmail || ''}
                       onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { contactEmail: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                      className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono"
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Phone</label>
+                    <label className="block font-bold text-slate-700 mb-1">Phone</label>
                     <input
                       type="text"
                       value={currentPage.content.contactPhone || ''}
                       onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { contactPhone: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                      className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ทักษะทางเทคนิค (Hard Skills)' : 'Hard Skills'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.hardSkills || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { hardSkills: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ทักษะทางสังคม (Soft Skills)' : 'Soft Skills'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.softSkills || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { softSkills: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
                   />
                 </div>
               </>
@@ -625,62 +727,65 @@ export const PortfolioBuilderView: React.FC = () => {
 
             {currentPage.type === 'sop' && (
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">
+                <label className="block font-bold text-slate-700 mb-1">
                   {isTh ? 'เนื้อความเรียงความแสดงเจตจำนง (Statement of Purpose)' : 'Statement of Purpose Body'}
                 </label>
                 <textarea
-                  rows={10}
+                  rows={9}
                   value={currentPage.content.body || ''}
                   onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { body: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white leading-relaxed font-sans"
+                  className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 leading-relaxed font-sans"
                 />
               </div>
             )}
 
             {currentPage.type === 'academic' && (
               <>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50/70 border border-blue-200/80">
+                  <span className="font-bold text-slate-800">
+                    {isTh ? 'รูปภาพโครงงาน / การทดสอบ' : 'Project Photo / Demo'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => projectPhotoInputRef.current?.click()}
+                    className="px-3 py-1 glass-embossed-button rounded-lg text-xs font-bold text-blue-800 flex items-center gap-1"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{currentPage.content.projectPhotoUrl ? (isTh ? 'เปลี่ยนรูป' : 'Change') : (isTh ? 'อัปโหลดรูป' : 'Upload')}</span>
+                  </button>
+                </div>
+
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ชื่อโครงงาน / ซอฟต์แวร์' : 'Project Title'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.projectTitle || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { projectTitle: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'การแข่งขันและรางวัลที่ได้รับ' : 'Competition & Award Tier'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.awardTier || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { awardTier: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
-                    {isTh ? 'บทบาทหน้าที่ในโครงการ' : 'Role in Project'}
-                  </label>
-                  <input
-                    type="text"
-                    value={currentPage.content.role || ''}
-                    onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { role: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'คำอธิบายโครงการและระเบียบวิธีทำ' : 'Project Description & Methodology'}
                   </label>
                   <textarea
                     rows={4}
                     value={currentPage.content.description || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { description: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white leading-relaxed"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl leading-relaxed"
                   />
                 </div>
               </>
@@ -688,37 +793,40 @@ export const PortfolioBuilderView: React.FC = () => {
 
             {currentPage.type === 'camp' && (
               <>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50/70 border border-blue-200/80">
+                  <span className="font-bold text-slate-800">
+                    {isTh ? 'รูปถ่ายบรรยากาศค่าย / ห้องแล็บ' : 'Camp / Lab Photo'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => projectPhotoInputRef.current?.click()}
+                    className="px-3 py-1 glass-embossed-button rounded-lg text-xs font-bold text-blue-800 flex items-center gap-1"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{currentPage.content.campPhotoUrl ? (isTh ? 'เปลี่ยนรูป' : 'Change') : (isTh ? 'อัปโหลดรูป' : 'Upload')}</span>
+                  </button>
+                </div>
+
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ชื่อค่ายวิชาการ' : 'Camp Name'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.campName || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { campName: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
-                    {isTh ? 'หน่วยงาน / คณะที่จัด' : 'Organizer'}
-                  </label>
-                  <input
-                    type="text"
-                    value={currentPage.content.organizer || ''}
-                    onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { organizer: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'สิ่งที่ได้เรียนรู้และการต่อยอด' : 'Learnings & Takeaways'}
                   </label>
                   <textarea
                     rows={4}
                     value={currentPage.content.learnings || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { learnings: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white leading-relaxed"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl leading-relaxed"
                   />
                 </div>
               </>
@@ -726,37 +834,40 @@ export const PortfolioBuilderView: React.FC = () => {
 
             {currentPage.type === 'activity' && (
               <>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50/70 border border-blue-200/80">
+                  <span className="font-bold text-slate-800">
+                    {isTh ? 'รูปถ่ายกิจกรรมจิตอาสา / ผู้นำ' : 'Activity Photo'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => projectPhotoInputRef.current?.click()}
+                    className="px-3 py-1 glass-embossed-button rounded-lg text-xs font-bold text-blue-800 flex items-center gap-1"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{currentPage.content.photoUrl ? (isTh ? 'เปลี่ยนรูป' : 'Change') : (isTh ? 'อัปโหลดรูป' : 'Upload')}</span>
+                  </button>
+                </div>
+
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ชื่อกิจกรรมความเป็นผู้นำ / จิตอาสา' : 'Activity Name'}
                   </label>
                   <input
                     type="text"
                     value={currentPage.content.activityName || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { activityName: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
-                    {isTh ? 'ผลงานความสำเร็จ' : 'Achievement'}
-                  </label>
-                  <input
-                    type="text"
-                    value={currentPage.content.achievement || ''}
-                    onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { achievement: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-bold text-slate-700 mb-1">
                     {isTh ? 'ผลกระทบเชิงบวกต่อสังคม (Impact)' : 'Impact on Society'}
                   </label>
                   <textarea
                     rows={4}
                     value={currentPage.content.impact || ''}
                     onChange={(e) => updatePortfolioPage(currentPage.pageNumber, { impact: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white leading-relaxed"
+                    className="w-full px-3 py-2 bg-white/90 border border-slate-200 rounded-xl leading-relaxed"
                   />
                 </div>
               </>
@@ -764,24 +875,24 @@ export const PortfolioBuilderView: React.FC = () => {
           </div>
 
           {/* Page navigation controls */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
             <button
               disabled={activePageIndex === 0}
               onClick={() => setActivePageIndex(activePageIndex - 1)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 glass-embossed-button px-3 py-1.5 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>{isTh ? 'หน้าก่อนหน้า' : 'Previous'}</span>
             </button>
 
-            <span className="font-mono text-xs text-slate-400">
+            <span className="font-mono text-xs text-slate-500 font-bold">
               {activePageIndex + 1} / {portfolioPages.length}
             </span>
 
             <button
               disabled={activePageIndex === portfolioPages.length - 1}
               onClick={() => setActivePageIndex(activePageIndex + 1)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 glass-embossed-button px-3 py-1.5 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed"
             >
               <span>{isTh ? 'หน้าถัดไป' : 'Next'}</span>
               <ChevronRight className="w-4 h-4" />
@@ -789,14 +900,14 @@ export const PortfolioBuilderView: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Live A4 Aspect Canvas */}
-        <div className="lg:col-span-7 flex flex-col items-center">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            {isTh ? 'ตัวอย่างหน้ากระดาษ A4 เสมือนจริง' : 'Live A4 Print Preview'}
+        {/* Live A4 Aspect Canvas */}
+        <div className="flex flex-col items-center">
+          <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-3">
+            {isTh ? 'ตัวอย่างหน้ากระดาษ A4 เสมือนจริง (TCAS Portfolio)' : 'Live A4 Print Preview'}
           </div>
 
           {/* Interactive A4 Sheet Wrapper */}
-          <div className="w-full max-w-[500px] aspect-[1/1.414] bg-white rounded-xl shadow-xl border border-slate-300 overflow-hidden relative">
+          <div className="w-full max-w-[440px] aspect-[1/1.414] bg-white rounded-2xl shadow-2xl border border-slate-300 overflow-hidden relative">
             {renderA4PageContent(currentPage)}
           </div>
         </div>

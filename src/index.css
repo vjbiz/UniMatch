@@ -10,6 +10,9 @@
 
   body {
     font-family: var(--font-body);
+    background-color: #f1f5f9;
+    color: #0f172a;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -17,10 +20,142 @@
   }
 }
 
-/* Custom scrollbars for clean academic UI */
+/* Embossed Glassmorphism Utilities */
+.glass-embossed-card {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.03),
+    0 8px 24px -4px rgba(15, 23, 42, 0.08);
+}
+
+.glass-embossed-button {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.85) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 1),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.06),
+    0 4px 10px rgba(15, 23, 42, 0.06);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-embossed-button:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 0.95) 100%);
+  box-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 1),
+    0 6px 14px rgba(15, 23, 42, 0.09);
+  transform: translateY(-1px);
+}
+
+.glass-embossed-button:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+/* Primary Color Embossed Buttons */
+.glass-embossed-primary {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.45),
+    inset 0 -1.5px 1px rgba(0, 0, 0, 0.25),
+    0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-embossed-primary:hover {
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  box-shadow:
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6),
+    0 6px 16px rgba(37, 99, 235, 0.38);
+  transform: translateY(-1px);
+}
+
+.glass-embossed-primary:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Soft Tinted Pastel Glass Cards */
+.glass-card-blue {
+  background: linear-gradient(145deg, rgba(200, 232, 255, 0.88) 0%, rgba(186, 230, 253, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(59, 130, 246, 0.12),
+    0 8px 20px -2px rgba(37, 99, 235, 0.12);
+}
+
+.glass-card-green {
+  background: linear-gradient(145deg, rgba(212, 246, 197, 0.88) 0%, rgba(220, 252, 231, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(22, 163, 74, 0.12),
+    0 8px 20px -2px rgba(22, 163, 74, 0.12);
+}
+
+.glass-card-purple {
+  background: linear-gradient(145deg, rgba(233, 213, 255, 0.88) 0%, rgba(243, 232, 255, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(124, 58, 237, 0.12),
+    0 8px 20px -2px rgba(124, 58, 237, 0.12);
+}
+
+.glass-card-amber {
+  background: linear-gradient(145deg, rgba(255, 229, 194, 0.88) 0%, rgba(254, 243, 199, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(234, 88, 12, 0.12),
+    0 8px 20px -2px rgba(234, 88, 12, 0.12);
+}
+
+.glass-card-rose {
+  background: linear-gradient(145deg, rgba(254, 226, 226, 0.88) 0%, rgba(255, 209, 209, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(220, 38, 38, 0.12),
+    0 8px 20px -2px rgba(220, 38, 38, 0.12);
+}
+
+.glass-card-cyan {
+  background: linear-gradient(145deg, rgba(207, 250, 254, 0.88) 0%, rgba(204, 251, 241, 0.72) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 1px rgba(13, 148, 136, 0.12),
+    0 8px 20px -2px rgba(13, 148, 136, 0.12);
+}
+
+/* Custom scrollbars for clean UI */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -28,12 +163,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.6);
+  background: rgba(100, 116, 139, 0.55);
 }
 
 /* Dedicated Print Stylesheet for TCAS 10-Page Portfolio Export */
@@ -50,7 +185,6 @@
     overflow: visible !important;
   }
 
-  /* Hide navigation, UI controls, editing toolbars, sidebars */
   .no-print,
   nav,
   header,
@@ -60,7 +194,6 @@
     display: none !important;
   }
 
-  /* Full-bleed A4 presentation for portfolio pages */
   .tcas-print-container {
     display: block !important;
     width: 210mm !important;
@@ -80,7 +213,6 @@
     overflow: hidden !important;
   }
 
-  /* Ensure colors and background photos are printed accurately */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;

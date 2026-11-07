@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { COMMUNITY_DISCUSSIONS, EXTRACURRICULAR_ACTIVITIES } from '../../data/tcasData';
-import { CheckCircle2, MessageSquare, Users, Sparkles, Plus, ThumbsUp, ArrowRight, Share2, Award, Briefcase, BookOpen } from 'lucide-react';
+import { COMMUNITY_DISCUSSIONS } from '../../data/tcasData';
+import { CheckCircle2, MessageSquare, Users, Sparkles, Plus, ThumbsUp, ArrowRight } from 'lucide-react';
 import { ActivitiesView } from '../ActivitiesView';
 
 export const ExperienceHub: React.FC = () => {
-  const { language, experienceView, setExperienceView, profile, addTrackedActivity } = useApp();
+  const { language, experienceView, setExperienceView, profile } = useApp();
   const isTh = language === 'th';
 
-  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('all');
   const [newQuestionTitle, setNewQuestionTitle] = useState('');
   const [newQuestionBody, setNewQuestionBody] = useState('');
   const [isAskingOpen, setIsAskingOpen] = useState(false);
@@ -47,10 +46,10 @@ export const ExperienceHub: React.FC = () => {
   if (experienceView === 'activities') {
     return (
       <div className="space-y-4">
-        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="p-3 bg-white/70 backdrop-blur-md border-b border-white/60 flex items-center justify-between">
           <button
             onClick={() => setExperienceView('hub')}
-            className="text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-sm"
+            className="text-xs font-bold text-slate-700 hover:text-slate-900 glass-embossed-button px-3 py-1.5 rounded-xl shadow-sm"
           >
             ← {isTh ? 'กลับสู่หน้า Experience' : 'Back to Experience Hub'}
           </button>
@@ -61,25 +60,25 @@ export const ExperienceHub: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
+    <div className="p-4 sm:p-5 space-y-5">
       {/* Top Banner matching draft aesthetic */}
       <div className="text-center pt-2 pb-1">
-        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-600 text-white font-bold text-sm tracking-wide shadow-md shadow-emerald-500/25">
+        <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full glass-embossed-primary text-white font-bold text-sm tracking-wide shadow-md">
           <Sparkles className="w-4 h-4 text-emerald-200" />
           <span>{isTh ? 'ประสบการณ์ & การเชื่อมต่อ (Experience)' : 'Experience'}</span>
         </div>
-        <p className="text-xs text-slate-500 mt-2">
+        <p className="text-xs text-slate-600 mt-2 font-medium">
           {isTh ? 'พัฒนาทักษะ สะสมกิจกรรมค่าย และแลกเปลี่ยนข้อมูลกับเพื่อนและรุ่นพี่' : 'Build practical skills, explore competitions, and connect with peers'}
         </p>
       </div>
 
-      {/* The 2 Signature Cards from Draft Style */}
-      <div className="space-y-5">
-        {/* Card 1: Experience (Green Card #D4F6C5) */}
-        <div className="p-6 rounded-3xl bg-[#D4F6C5] border-2 border-[#86EFAC] shadow-sm relative overflow-hidden">
+      {/* The 2 Signature Cards from Draft Style with Embossed Glassy Styling */}
+      <div className="space-y-4">
+        {/* Card 1: Experience (Green Card) */}
+        <div className="p-5 sm:p-6 rounded-3xl glass-card-green shadow-xl relative overflow-hidden">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-[#16A34A] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <div className="w-7 h-7 rounded-full bg-[#16A34A] text-white flex items-center justify-center font-bold text-xs shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.15)]">
                 2
               </div>
               <h3 className="text-xl font-extrabold text-slate-900">
@@ -89,21 +88,21 @@ export const ExperienceHub: React.FC = () => {
 
             <button
               onClick={() => setExperienceView('activities')}
-              className="text-xs font-bold text-emerald-900 bg-white/80 hover:bg-white px-3 py-1.5 rounded-xl transition-colors shadow-sm flex items-center gap-1"
+              className="text-xs font-bold text-emerald-900 glass-embossed-button px-3.5 py-1.5 rounded-xl transition-all shadow-sm flex items-center gap-1"
             >
               <span>{isTh ? 'เปิดคลังกิจกรรม' : 'Explore All'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <p className="text-xs text-emerald-950 font-medium mb-4">
+          <p className="text-xs text-emerald-950 font-semibold mb-4 leading-relaxed">
             {isTh
               ? 'รวบรวมประสบการณ์จริงเพื่อสร้างความโดดเด่นในแฟ้มสะสมผลงานรอบพอร์ต'
               : 'Cultivate tangible experiences across foundational disciplines to excel in Round 1.'}
           </p>
 
           {/* 5 Checkmark Items matching Draft */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-5">
+          <div className="space-y-2 mb-4">
             {[
               { id: 'study', labelTh: 'Study experience (ประสบการณ์การเรียนรู้เชิงลึก)', labelEn: 'Study experience' },
               { id: 'skills', labelTh: 'Practical skills (ทักษะภาคปฏิบัติ & โครงงาน)', labelEn: 'Practical skills' },
@@ -114,7 +113,7 @@ export const ExperienceHub: React.FC = () => {
               <div
                 key={idx}
                 onClick={() => setExperienceView('activities')}
-                className="flex items-center gap-2.5 p-2.5 bg-white/80 hover:bg-white rounded-xl text-xs font-semibold text-slate-900 transition-colors cursor-pointer border border-emerald-200/60"
+                className="flex items-center gap-2.5 p-2.5 bg-white/85 backdrop-blur-md rounded-2xl text-xs font-bold text-slate-900 transition-all cursor-pointer border border-white/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_6px_rgba(22,163,74,0.06)] hover:bg-white hover:scale-[1.01]"
               >
                 <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0" />
                 <span>{isTh ? item.labelTh : item.labelEn}</span>
@@ -122,22 +121,22 @@ export const ExperienceHub: React.FC = () => {
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-emerald-300/60 text-xs text-emerald-900">
+          <div className="flex items-center justify-between pt-3 border-t border-emerald-300/60 text-xs text-emerald-950 font-semibold">
             <span>{isTh ? `คุณสะสมไว้แล้ว ${profile.trackedActivities.length} กิจกรรม` : `You have ${profile.trackedActivities.length} tracked activities`}</span>
             <button
               onClick={() => setExperienceView('activities')}
-              className="font-bold underline hover:text-emerald-950"
+              className="font-extrabold underline hover:text-emerald-900"
             >
               {isTh ? '+ เพิ่มกิจกรรมใหม่' : '+ Add New Activity'}
             </button>
           </div>
         </div>
 
-        {/* Card 2: Connect (Red/Pink Card #FEE2E2) */}
-        <div className="p-6 rounded-3xl bg-[#FEE2E2] border-2 border-[#FCA5A5] shadow-sm relative overflow-hidden">
+        {/* Card 2: Connect (Rose/Pink Card) */}
+        <div className="p-5 sm:p-6 rounded-3xl glass-card-rose shadow-xl relative overflow-hidden">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-[#DC2626] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              <div className="w-7 h-7 rounded-full bg-[#DC2626] text-white flex items-center justify-center font-bold text-xs shadow-[inset_0_1px_1px_rgba(255,255,255,0.7),0_2px_4px_rgba(0,0,0,0.15)]">
                 2
               </div>
               <h3 className="text-xl font-extrabold text-slate-900">
@@ -147,30 +146,30 @@ export const ExperienceHub: React.FC = () => {
 
             <button
               onClick={() => setIsAskingOpen(!isAskingOpen)}
-              className="text-xs font-bold text-red-900 bg-white/80 hover:bg-white px-3 py-1.5 rounded-xl transition-colors shadow-sm flex items-center gap-1"
+              className="text-xs font-bold text-red-900 glass-embossed-button px-3.5 py-1.5 rounded-xl transition-all shadow-sm flex items-center gap-1"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{isTh ? 'ตั้งคำถามใหม่' : 'Ask Question'}</span>
             </button>
           </div>
 
-          <p className="text-xs text-red-950 font-medium mb-4">
+          <p className="text-xs text-red-950 font-semibold mb-4 leading-relaxed">
             {isTh
               ? 'แลกเปลี่ยนประสบการณ์จริงกับรุ่นพี่ที่เคยติด TCAS รอบพอร์ต และหาเพื่อนร่วมทีมแข่งขัน'
               : 'Ask questions about college life, share your story, and discover suggested peers.'}
           </p>
 
           {/* 3 Checkmark Items from Draft */}
-          <div className="space-y-2 mb-6">
-            <div className="flex items-center gap-2.5 p-2.5 bg-white/80 rounded-xl text-xs font-semibold text-slate-900 border border-red-200/60">
+          <div className="space-y-2 mb-5">
+            <div className="flex items-center gap-2.5 p-2.5 bg-white/85 backdrop-blur-md rounded-2xl text-xs font-bold text-slate-900 border border-white/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_6px_rgba(220,38,38,0.06)]">
               <CheckCircle2 className="w-4 h-4 text-[#DC2626] shrink-0" />
               <span>{isTh ? 'ถามคำถามเกี่ยวกับการเรียนมหาวิทยาลัย (Ask questions about college)' : 'Ask questions about college'}</span>
             </div>
-            <div className="flex items-center gap-2.5 p-2.5 bg-white/80 rounded-xl text-xs font-semibold text-slate-900 border border-red-200/60">
+            <div className="flex items-center gap-2.5 p-2.5 bg-white/85 backdrop-blur-md rounded-2xl text-xs font-bold text-slate-900 border border-white/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_6px_rgba(220,38,38,0.06)]">
               <CheckCircle2 className="w-4 h-4 text-[#DC2626] shrink-0" />
               <span>{isTh ? 'แบ่งปันประสบการณ์การทำกิจกรรม (Share experience)' : 'Share experience'}</span>
             </div>
-            <div className="flex items-center gap-2.5 p-2.5 bg-white/80 rounded-xl text-xs font-semibold text-slate-900 border border-red-200/60">
+            <div className="flex items-center gap-2.5 p-2.5 bg-white/85 backdrop-blur-md rounded-2xl text-xs font-bold text-slate-900 border border-white/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_6px_rgba(220,38,38,0.06)]">
               <Users className="w-4 h-4 text-[#DC2626] shrink-0" />
               <span>{isTh ? 'เพิ่มเพื่อนผ่านรายชื่อแนะนำ (Add friends through suggested contacts)' : 'Add friends through suggested contacts'}</span>
             </div>
@@ -178,7 +177,7 @@ export const ExperienceHub: React.FC = () => {
 
           {/* Ask Question Form Drawer */}
           {isAskingOpen && (
-            <form onSubmit={handlePostQuestion} className="bg-white p-4 rounded-2xl border border-red-200 mb-6 space-y-3">
+            <form onSubmit={handlePostQuestion} className="bg-white/90 p-4 rounded-2xl border border-red-200 mb-5 space-y-3 shadow-md">
               <h4 className="text-xs font-bold text-slate-900">
                 {isTh ? 'โพสต์คำถามถึงรุ่นพี่และเพื่อนๆ' : 'Post Question to Community'}
               </h4>
@@ -188,14 +187,14 @@ export const ExperienceHub: React.FC = () => {
                 value={newQuestionTitle}
                 onChange={(e) => setNewQuestionTitle(e.target.value)}
                 placeholder={isTh ? 'หัวข้อคำถาม เช่น ควรใส่เกียรติบัตรค่ายกี่ใบดี?' : 'Question title...'}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <textarea
                 rows={2}
                 value={newQuestionBody}
                 onChange={(e) => setNewQuestionBody(e.target.value)}
                 placeholder={isTh ? 'รายละเอียดเพิ่มเติม...' : 'More details...'}
-                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <div className="flex justify-end gap-2">
                 <button
@@ -207,7 +206,7 @@ export const ExperienceHub: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg"
+                  className="px-4 py-1.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-sm"
                 >
                   {isTh ? 'โพสต์คำถาม' : 'Post'}
                 </button>
@@ -222,7 +221,7 @@ export const ExperienceHub: React.FC = () => {
             </h4>
 
             {discussions.map((post) => (
-              <div key={post.id} className="p-4 bg-white rounded-2xl border border-red-100 shadow-sm space-y-2">
+              <div key={post.id} className="p-4 bg-white/90 backdrop-blur-md rounded-2xl border border-white shadow-sm space-y-2">
                 <div className="flex items-center justify-between text-[11px] text-slate-500">
                   <div className="flex items-center gap-1.5">
                     <span className="font-bold text-slate-800">{post.authorName}</span>
@@ -244,7 +243,7 @@ export const ExperienceHub: React.FC = () => {
                   <div className="flex items-center gap-3 text-slate-500">
                     <button
                       onClick={() => handleLikePost(post.id)}
-                      className="flex items-center gap-1 hover:text-red-600 transition-colors"
+                      className="flex items-center gap-1 hover:text-red-600 transition-colors font-semibold"
                     >
                       <ThumbsUp className="w-3.5 h-3.5" />
                       <span>{post.likes}</span>
@@ -255,7 +254,7 @@ export const ExperienceHub: React.FC = () => {
                     </span>
                   </div>
 
-                  <span className="text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-semibold">
+                  <span className="text-[10px] text-red-600 bg-red-50 border border-red-200/60 px-2.5 py-0.5 rounded-full font-bold">
                     {post.targetMajor}
                   </span>
                 </div>

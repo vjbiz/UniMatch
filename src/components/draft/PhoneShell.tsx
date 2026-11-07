@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { Compass, Star, User, Smartphone, Monitor, Sparkles } from 'lucide-react';
+import { Compass, Star, User, Sparkles } from 'lucide-react';
 import { DiscoverHub } from './DiscoverHub';
 import { ExperienceHub } from './ExperienceHub';
 import { ProfileHub } from './ProfileHub';
@@ -17,17 +17,13 @@ export const PhoneShell: React.FC = () => {
     setMainTab,
     discoverView,
     setDiscoverView,
-    experienceView,
     setExperienceView,
-    profileView,
     setProfileView,
-    phoneFrameMode,
-    togglePhoneFrameMode,
     setIsAiAdvisorOpen,
   } = useApp();
   const isTh = language === 'th';
 
-  // Render active content inside the screen
+  // Render active content inside the mobile webapp
   const renderScreenContent = () => {
     if (mainTab === 'discover') {
       if (discoverView === 'hub') return <DiscoverHub />;
@@ -49,134 +45,139 @@ export const PhoneShell: React.FC = () => {
   };
 
   return (
-    <div className="py-6 sm:py-10 px-4 flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
-      {/* Top Floating Control Bar */}
-      <div className="mb-6 flex flex-wrap items-center justify-center gap-3 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 shadow-sm text-xs">
-        {/* Toggle Phone Frame vs Expanded View */}
-        <button
-          onClick={togglePhoneFrameMode}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors"
-          title="Toggle between phone mockup and expanded canvas"
-        >
-          {phoneFrameMode ? <Smartphone className="w-4 h-4 text-blue-600" /> : <Monitor className="w-4 h-4 text-blue-600" />}
-          <span>{phoneFrameMode ? (isTh ? '📱 มุมมองสมาร์ตโฟน (ตามแบบร่าง)' : '📱 Phone Mockup View') : (isTh ? '🖥️ มุมมองเต็มจอ' : '🖥️ Expanded Canvas View')}</span>
-        </button>
-
-        {/* AI Advisor Button */}
-        <button
-          onClick={() => setIsAiAdvisorOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors border border-blue-200"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-          <span>{isTh ? 'ปรึกษา AI กลยุทธ์' : 'AI Advisor'}</span>
-        </button>
-
-        {/* Language switch */}
-        <button
-          onClick={toggleLanguage}
-          className="px-3 py-1.5 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors"
-        >
-          {language === 'th' ? 'EN 🇬🇧' : 'ไทย 🇹🇭'}
-        </button>
-      </div>
-
-      {/* Main Container: either Phone Frame Mockup or Expanded Mode */}
-      <div
-        className={`transition-all duration-300 w-full ${
-          phoneFrameMode
-            ? 'max-w-[440px] bg-black p-3.5 rounded-[52px] shadow-2xl border-4 border-slate-800'
-            : 'max-w-6xl bg-white rounded-3xl border border-slate-200 shadow-lg p-2'
-        }`}
-      >
-        {/* Inside Phone Screen Bezel */}
-        <div
-          className={`w-full bg-white flex flex-col justify-between overflow-hidden relative ${
-            phoneFrameMode
-              ? 'rounded-[42px] min-h-[780px] max-h-[880px] border border-slate-200'
-              : 'rounded-2xl min-h-[700px]'
-          }`}
-        >
-          {/* Top Notch / Dynamic Island (Phone Mode only) */}
-          {phoneFrameMode && (
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40 pointer-events-none flex items-center justify-end px-3">
-              <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700" />
+    <div className="min-h-screen bg-slate-100/90 flex flex-col justify-between">
+      {/* Mobile-First Webapp Centered Canvas */}
+      <div className="w-full max-w-lg mx-auto min-h-screen flex flex-col justify-between bg-white/80 backdrop-blur-xl shadow-2xl border-x border-slate-200/90 relative">
+        
+        {/* Top Header with Embossed Glass Design */}
+        <header className="sticky top-0 z-40 px-4 py-3 bg-white/85 backdrop-blur-md border-b border-white/60 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_12px_rgba(0,0,0,0.03)] flex items-center justify-between gap-2">
+          {/* Brand Wordmark */}
+          <button
+            onClick={() => {
+              setMainTab('discover');
+              setDiscoverView('hub');
+            }}
+            className="flex items-center gap-2 group text-left"
+          >
+            <div className="w-8 h-8 rounded-xl glass-embossed-primary text-white flex items-center justify-center font-bold text-xs shadow-sm">
+              เข็ม
             </div>
-          )}
+            <div className="flex flex-col">
+              <span className="text-sm font-extrabold text-slate-900 leading-tight">
+                TCAS Compass
+              </span>
+              <span className="text-[9px] font-semibold text-blue-600 uppercase tracking-wider">
+                {isTh ? 'เข็มทิศรอบพอร์ต' : 'Port Navigator'}
+              </span>
+            </div>
+          </button>
 
-          {/* Screen Scrollable Content Body */}
-          <div className={`flex-1 overflow-y-auto no-scrollbar ${phoneFrameMode ? 'pt-8 pb-4' : 'pt-4 pb-4'}`}>
-            {renderScreenContent()}
+          {/* Center Active Section Capsule (Embossed Glassy Pill) */}
+          <div className="px-4 py-1.5 rounded-full glass-embossed-primary text-white font-bold text-xs shadow-md shadow-blue-500/20">
+            {mainTab === 'discover' && (isTh ? 'ค้นพบ (Discover)' : 'Discover')}
+            {mainTab === 'experience' && (isTh ? 'ประสบการณ์ (Experience)' : 'Experience')}
+            {mainTab === 'profile' && (isTh ? 'โปรไฟล์ (Profile)' : 'Profile')}
           </div>
 
-          {/* Bottom Navigation Bar (The exact 3 icons from draft diagram) */}
-          <div className="border-t border-slate-200 bg-white/95 backdrop-blur-md px-6 py-2.5 flex items-center justify-around shrink-0 z-30">
-            {/* 1. Discover Tab */}
+          {/* Right Utilities: AI Advisor & Language Switcher */}
+          <div className="flex items-center gap-1.5">
             <button
-              onClick={() => {
-                setMainTab('discover');
-                setDiscoverView('hub');
-              }}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                mainTab === 'discover'
-                  ? 'text-blue-600 font-extrabold scale-105'
-                  : 'text-slate-400 hover:text-slate-700'
-              }`}
+              onClick={() => setIsAiAdvisorOpen(true)}
+              className="p-2 rounded-xl glass-embossed-button text-blue-700 hover:text-blue-800"
+              title={isTh ? 'ปรึกษา AI กลยุทธ์' : 'AI Advisor'}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                mainTab === 'discover' ? 'bg-blue-50 text-blue-600' : 'text-slate-400'
-              }`}>
-                <Compass className="w-5 h-5 stroke-[2.3]" />
-              </div>
-              <span className="text-[11px] leading-none">
-                {isTh ? 'ค้นพบ' : 'Discover'}
-              </span>
+              <Sparkles className="w-4 h-4 text-blue-600" />
             </button>
 
-            {/* 2. Experience Tab */}
             <button
-              onClick={() => {
-                setMainTab('experience');
-                setExperienceView('hub');
-              }}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                mainTab === 'experience'
-                  ? 'text-emerald-600 font-extrabold scale-105'
-                  : 'text-slate-400 hover:text-slate-700'
-              }`}
+              onClick={toggleLanguage}
+              className="px-2.5 py-1.5 rounded-xl glass-embossed-button text-xs font-bold text-slate-700 hover:text-slate-900"
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                mainTab === 'experience' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400'
-              }`}>
-                <Star className="w-5 h-5 stroke-[2.3]" />
-              </div>
-              <span className="text-[11px] leading-none">
-                {isTh ? 'ประสบการณ์' : 'Experience'}
-              </span>
-            </button>
-
-            {/* 3. Profile Tab */}
-            <button
-              onClick={() => {
-                setMainTab('profile');
-                setProfileView('overview');
-              }}
-              className={`flex flex-col items-center gap-1 transition-all ${
-                mainTab === 'profile'
-                  ? 'text-cyan-600 font-extrabold scale-105'
-                  : 'text-slate-400 hover:text-slate-700'
-              }`}
-            >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                mainTab === 'profile' ? 'bg-cyan-50 text-cyan-600' : 'text-slate-400'
-              }`}>
-                <User className="w-5 h-5 stroke-[2.3]" />
-              </div>
-              <span className="text-[11px] leading-none">
-                {isTh ? 'โปรไฟล์' : 'Profile'}
-              </span>
+              {language === 'th' ? 'EN' : 'ไทย'}
             </button>
           </div>
-        </div>
+        </header>
+
+        {/* Scrollable Webapp Content Area */}
+        <main className="flex-1 pb-24">
+          {renderScreenContent()}
+        </main>
+
+        {/* Sticky Embossed Glassy Bottom Navigation Bar */}
+        <nav className="fixed bottom-0 left-0 right-0 z-40 max-w-lg mx-auto bg-white/85 backdrop-blur-xl border-t border-white/80 shadow-[inset_0_1.5px_1px_rgba(255,255,255,0.9),0_-4px_20px_rgba(0,0,0,0.06)] px-6 py-2.5 flex items-center justify-around">
+          {/* 1. Discover Tab */}
+          <button
+            onClick={() => {
+              setMainTab('discover');
+              setDiscoverView('hub');
+            }}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              mainTab === 'discover'
+                ? 'text-blue-600 font-extrabold scale-105'
+                : 'text-slate-400 hover:text-slate-700'
+            }`}
+          >
+            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center transition-all ${
+              mainTab === 'discover'
+                ? 'glass-card-blue text-blue-700 shadow-md'
+                : 'glass-embossed-button text-slate-400'
+            }`}>
+              <Compass className="w-5 h-5 stroke-[2.3]" />
+            </div>
+            <span className="text-[11px] leading-none">
+              {isTh ? 'ค้นพบ' : 'Discover'}
+            </span>
+          </button>
+
+          {/* 2. Experience Tab */}
+          <button
+            onClick={() => {
+              setMainTab('experience');
+              setExperienceView('hub');
+            }}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              mainTab === 'experience'
+                ? 'text-emerald-600 font-extrabold scale-105'
+                : 'text-slate-400 hover:text-slate-700'
+            }`}
+          >
+            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center transition-all ${
+              mainTab === 'experience'
+                ? 'glass-card-green text-emerald-700 shadow-md'
+                : 'glass-embossed-button text-slate-400'
+            }`}>
+              <Star className="w-5 h-5 stroke-[2.3]" />
+            </div>
+            <span className="text-[11px] leading-none">
+              {isTh ? 'ประสบการณ์' : 'Experience'}
+            </span>
+          </button>
+
+          {/* 3. Profile Tab */}
+          <button
+            onClick={() => {
+              setMainTab('profile');
+              setProfileView('overview');
+            }}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              mainTab === 'profile'
+                ? 'text-cyan-600 font-extrabold scale-105'
+                : 'text-slate-400 hover:text-slate-700'
+            }`}
+          >
+            <div className={`w-9 h-9 rounded-2xl flex items-center justify-center transition-all ${
+              mainTab === 'profile'
+                ? 'glass-card-cyan text-teal-700 shadow-md'
+                : 'glass-embossed-button text-slate-400'
+            }`}>
+              <User className="w-5 h-5 stroke-[2.3]" />
+            </div>
+            <span className="text-[11px] leading-none">
+              {isTh ? 'โปรไฟล์' : 'Profile'}
+            </span>
+          </button>
+        </nav>
+
       </div>
     </div>
   );
