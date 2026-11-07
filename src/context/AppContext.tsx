@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   ActivityCategory,
+  DiscoverView,
+  ExperienceView,
   Language,
+  MainNavTab,
   NavTab,
   PortfolioPageData,
+  ProfileView,
   StudentProfile,
   TrackedActivityItem,
 } from '../types/tcas';
@@ -15,6 +19,17 @@ interface AppContextType {
   toggleLanguage: () => void;
   activeTab: NavTab;
   setActiveTab: (tab: NavTab) => void;
+  mainTab: MainNavTab;
+  setMainTab: (tab: MainNavTab) => void;
+  discoverView: DiscoverView;
+  setDiscoverView: (view: DiscoverView) => void;
+  experienceView: ExperienceView;
+  setExperienceView: (view: ExperienceView) => void;
+  profileView: ProfileView;
+  setProfileView: (view: ProfileView) => void;
+  phoneFrameMode: boolean;
+  setPhoneFrameMode: (enabled: boolean) => void;
+  togglePhoneFrameMode: () => void;
   profile: StudentProfile;
   updateProfile: (updates: Partial<StudentProfile>) => void;
   savedActivityIds: string[];
@@ -23,6 +38,7 @@ interface AppContextType {
   addTrackedActivity: (item: Omit<TrackedActivityItem, 'id'>) => void;
   updateTrackedActivity: (id: string, updates: Partial<TrackedActivityItem>) => void;
   removeTrackedActivity: (id: string) => void;
+  completeChallenge: (challengeId: string, points: number) => void;
   portfolioPages: PortfolioPageData[];
   updatePortfolioPage: (pageNumber: number, content: Record<string, any>) => void;
   resetPortfolioPages: () => void;
@@ -34,8 +50,8 @@ interface AppContextType {
   importDataJson: (jsonString: string) => boolean;
 }
 
-const STORAGE_KEY = 'tcas_compass_student_profile_v1';
-const LANG_STORAGE_KEY = 'tcas_compass_language_v1';
+const STORAGE_KEY = 'tcas_compass_student_profile_v2';
+const LANG_STORAGE_KEY = 'tcas_compass_language_v2';
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -49,7 +65,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
-  const [activeTab, setActiveTab] = useState<NavTab>('home');
+  // Navigation matching draft style
+  const [mainTab, setMainTab] = useState<MainNavTab>('discover');
+  const [discoverView, setDiscoverView] = useState<DiscoverView>('hub');
+  const [experienceView, setExperienceView] = useState<ExperienceView>('hub');
+  const [profileView, setProfileView] = useState<ProfileView>('overview');
+
+  // Phone Frame toggle (allows viewing exact phone frame mockup from draft, or full width)
+  const [phoneFrameMode, setPhoneFrameMode] = useState<boolean>(true);
+
   const [selectedFacultyFilter, setSelectedFacultyFilter] = useState<string | null>(null);
   const [isAiAdvisorOpen, setIsAiAdvisorOpen] = useState<boolean>(false);
 
@@ -72,7 +96,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return INITIAL_STUDENT_PROFILE;
   });
 
-  // Persist profile
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
@@ -92,6 +115,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const toggleLanguage = () => {
     setLanguage(language === 'th' ? 'en' : 'th');
+  };
+
+  const togglePhoneFrameMode = () => {
+    setPhoneFrameMode(!phoneFrameMode);
   };
 
   const updateProfile = (updates: Partial<StudentProfile>) => {
@@ -133,6 +160,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...prev,
       trackedActivities: prev.trackedActivities.filter((item) => item.id !== id),
     }));
+  };
+
+  const completeChallenge = (challengeId: string, points: number) => {
+    setProfile((prev) => {
+      if (prev.completedChallengeIds.includes(challengeId)) return prev;
+      return {
+        ...prev,
+        points: prev.points + points,
+        completedChallengeIds: [...prev.completedChallengeIds, challengeId],
+      };
+    });
   };
 
   const updatePortfolioPage = (pageNumber: number, content: Record<string, any>) => {
@@ -178,6 +216,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return false;
   };
 
+  const setActiveTab = (tab: NavTab) => {
+    if (tab === 'home' || tab === 'assessment' || tab === 'courses') {
+      setMainTab('discover');
+      if (tab === 'assessment') setDiscoverView('major-finder');
+      else if (tab === 'courses') setDiscoverView('explore-major');
+      else setDiscoverView('hub');
+    } else if (tab === 'activities') {
+      setMainTab('experience');
+      setExperienceView('activities');
+    } else if (tab === 'checker') {
+      setMainTab('discover');
+      setDiscoverView('tcas-link');
+    } else if (tab === 'builder') {
+      setMainTab('profile');
+      setProfileView('portfolio');
+    }
+  };
+
+  const activeTab: NavTab =
+    mainTab === 'discover'
+      ? discoverView === 'major-finder'
+        ? 'assessment'
+        : discoverView === 'explore-major'
+        ? 'courses'
+        : discoverView === 'tcas-link'
+        ? 'checker'
+        : 'home'
+      : mainTab === 'experience'
+      ? 'activities'
+      : profileView === 'portfolio'
+      ? 'builder'
+      : 'home';
+
   return (
     <AppContext.Provider
       value={{
@@ -186,6 +257,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleLanguage,
         activeTab,
         setActiveTab,
+        mainTab,
+        setMainTab,
+        discoverView,
+        setDiscoverView,
+        experienceView,
+        setExperienceView,
+        profileView,
+        setProfileView,
+        phoneFrameMode,
+        setPhoneFrameMode,
+        togglePhoneFrameMode,
         profile,
         updateProfile,
         savedActivityIds: profile.savedActivityIds,
@@ -194,6 +276,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addTrackedActivity,
         updateTrackedActivity,
         removeTrackedActivity,
+        completeChallenge,
         portfolioPages: profile.portfolioPages,
         updatePortfolioPage,
         resetPortfolioPages,

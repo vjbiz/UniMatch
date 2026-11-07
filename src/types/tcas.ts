@@ -2,15 +2,23 @@ export type Language = 'th' | 'en';
 
 export type NavTab = 'home' | 'assessment' | 'courses' | 'activities' | 'checker' | 'builder';
 
+export type MainNavTab = 'discover' | 'experience' | 'profile';
+
+export type DiscoverView = 'hub' | 'major-finder' | 'explore-major' | 'course-challenge' | 'tcas-link';
+
+export type ExperienceView = 'hub' | 'activities' | 'connect';
+
+export type ProfileView = 'overview' | 'hub' | 'portfolio' | 'certificates' | 'settings';
+
 export type RIASECDimension = 'R' | 'I' | 'A' | 'S' | 'E' | 'C';
 
 export interface RIASECScore {
-  R: number; // Realistic (ปฏิบัติการ/ลงมือทำ)
-  I: number; // Investigative (สืบเสาะ/ค้นคว้าวิจัย)
-  A: number; // Artistic (ศิลปะ/ความคิดสร้างสรรค์)
-  S: number; // Social (สังคม/การช่วยเหลือผู้อื่น)
-  E: number; // Enterprising (กล้าได้กล้าเสีย/ผู้นำธุรกิจ)
-  C: number; // Conventional (ระเบียบแบบแผน/การจัดการข้อมูล)
+  R: number; // Realistic
+  I: number; // Investigative
+  A: number; // Artistic
+  S: number; // Social
+  E: number; // Enterprising
+  C: number; // Conventional
 }
 
 export interface SubjectStrengths {
@@ -68,7 +76,7 @@ export interface UniversityCourse {
   portfolioTipsEn: string[];
 }
 
-export type ActivityCategory = 'competition' | 'camp' | 'volunteer' | 'mooc';
+export type ActivityCategory = 'competition' | 'camp' | 'volunteer' | 'mooc' | 'internship' | 'workshop';
 
 export interface ExtracurricularActivity {
   id: string;
@@ -109,6 +117,40 @@ export interface TrackedActivityItem {
   imageUrl?: string;
 }
 
+export interface CourseChallengeItem {
+  id: string;
+  titleTh: string;
+  titleEn: string;
+  majorCategoryTh: string;
+  majorCategoryEn: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  points: number;
+  questionTh: string;
+  questionEn: string;
+  optionsTh: string[];
+  optionsEn: string[];
+  correctIndex: number;
+  explanationTh: string;
+  explanationEn: string;
+  completed?: boolean;
+}
+
+export interface CommunityDiscussionPost {
+  id: string;
+  authorName: string;
+  authorGrade: string;
+  targetMajor: string;
+  timeAgoTh: string;
+  timeAgoEn: string;
+  titleTh: string;
+  titleEn: string;
+  bodyTh: string;
+  bodyEn: string;
+  likes: number;
+  commentsCount: number;
+  tags: string[];
+}
+
 export interface PortfolioPageData {
   pageNumber: number;
   type: 'cover' | 'profile' | 'sop' | 'academic' | 'camp' | 'activity' | 'certificate';
@@ -122,12 +164,17 @@ export interface StudentProfile {
   school: string;
   studyTrack: string;
   grade: 'M.4' | 'M.5' | 'M.6';
+  province: string;
+  email: string;
   currentGpax: number;
   mathCredits: number;
   sciCredits: number;
   engCredits: number;
   targetUniversities: string[];
   targetFaculty: string;
+  privacySetting: 'public' | 'friends' | 'private';
+  points: number;
+  completedChallengeIds: string[];
   riasecScores: RIASECScore;
   subjectStrengths: SubjectStrengths;
   completedAssessment: boolean;
