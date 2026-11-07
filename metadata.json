@@ -1,0 +1,6 @@
+{
+  "name": "TCAS Compass (เข็มทิศ TCAS)",
+  "description": "Bilingual university course finder, RIASEC career assessment, extracurricular activity hub, and 10-page TCAS portfolio builder for Thai high school students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
